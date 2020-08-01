@@ -1,7 +1,7 @@
 exports.config = {
     name: "help",
     aliases: ["commands", "cmds"],
-    cooldown: 10,
+    cooldown: 5,
     guildOnly: true,
     staffOnly: false,
     description: "Sends a neat embed regarding the information of all commands/categories.",
