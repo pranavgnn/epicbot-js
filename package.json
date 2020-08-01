@@ -1,0 +1,29 @@
+{
+  "name": "Random-Bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=12.18.2"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pranvexploder/Random-Bot.git"
+  },
+  "keywords": [],
+  "author": "Vex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pranvexploder/Random-Bot/issues"
+  },
+  "homepage": "https://github.com/pranvexploder/Random-Bot#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "node-fetch": "^2.6.0",
+    "quick.db": "^7.1.1"
+  }
+}
