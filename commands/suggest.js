@@ -59,7 +59,7 @@ exports.run = async (bot, message, args) => {
         bot.users.cache.find(m => m.id === id).send(suggestionEmbed).catch(() => {})
     }
     sendMsgToStaff(OWNER)
-    for (let currentStaff in STAFF) sendMsgToStaff(currentStaff)
+    for (let currentStaff of STAFF) sendMsgToStaff(currentStaff)
     message.channel.send(new MessageEmbed().setColor(`#eb98ff`).setDescription(`Your suggestion has been dropped in the owner's and all the staff's direct messages.\nSuggestion tag: \` #${db.fetch(`tags_suggestions`)} \``).setTitle(`Suggestion sent!`))
     db.push(`suggestion_${db.fetch(`tags_suggestions`)}`, {
         submitter: message.author,
