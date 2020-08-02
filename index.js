@@ -65,7 +65,7 @@ bot.on('message', async message => {
         }
     }
     if (!message.content.startsWith(PREFIX)) return;
-
+message.channel.messages.delete()
     var msg = message.content;
     var cont = msg.slice(PREFIX.length).split(/ +/);
     var command = cont[0].toLowerCase();

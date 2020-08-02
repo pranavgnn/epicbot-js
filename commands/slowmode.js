@@ -1,6 +1,6 @@
 exports.config = {
     name: "slowmode",
-    aliases: ["cooldowm", "slowmo"],
+    aliases: ["cooldown", "slowmo"],
     cooldown: 3,
     guildOnly: true,
     staffOnly: false,
@@ -15,6 +15,8 @@ exports.run = async (bot, message, args) => {
     var reason = args.join(` `)
     var channel = message.channel
     var time = args[0]
+    if (!time) return message.channel.send(`🚫 | Please enter the time in seconds of the slowmode!`)
+    if (parseInt(time) < 0) return message.channel.send(`🚫 | You can not set cooldown of less than 0 seconds!`)
     var mentionedChannel = message.mentions.channels.first()
     if (mentionedChannel && args[0] === `<#${mentionedChannel.id}>`) {
         channel = message.mentions.channels.first()
@@ -24,7 +26,7 @@ exports.run = async (bot, message, args) => {
     channel.setRateLimitPerUser(parseInt(time), reason)
     message.channel.send(new MessageEmbed()
         .setColor(`#eb98ff`)
-        .setTitle(`Slowmode successful!`)
+        .setTitle(`Slowmode changed!`)
         .setDescription(`Set #${channel.name}'s slowmode to ${time} seconds!`)    
     )
 }
