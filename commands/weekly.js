@@ -2,6 +2,7 @@ exports.config = {
     name: "weekly",
     cooldown: 604800,
     guildOnly: false,
+    staffOnly: false,
     description: "Places 10000 coins in your wallet. Can be used only once a week.",
     usage: "weekly",
     category: "Economy",

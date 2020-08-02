@@ -51,14 +51,14 @@ exports.run = async (bot, message, args) => {
             helpCommand.addField(`**Aliases**`, requiredCmd.config.aliases && requiredCmd.config.aliases.join(`, `) || `None`)
             helpCommand.addField(`**Required Permissions**`, require(`../modules/sortPermissions.js`)(requiredCmd.config.permissions))
             message.channel.send(helpCommand)
-        } else if (groups.includes(args[0].toLowerCase())) {
+        } else if (groups.includes(args.join(` `).toLowerCase())) {
             for (let cmd of commandFiles) {
                 var file = require(`../commands/${cmd}`);
-                if (file.config.category.toLowerCase() === args[0].toLowerCase()) helpCommand.addField(file.config.name, file.config.description)
+                if (file.config.category.toLowerCase() === args.join(` `).toLowerCase()) helpCommand.addField(file.config.name, file.config.description)
             }
-            helpCommand.setTitle(helpCommand.title + ` category ${args[0].toLowerCase()}.`)
+            helpCommand.setTitle(helpCommand.title + ` category ${args.join(` `).toLowerCase()}.`)
             message.channel.send(helpCommand)
-        } else message.channel.send(`Unfortunately, there was no command or category that I found with the keyword \`${args[0]}\`.`)
+        } else message.channel.send(`Unfortunately, there was no command or category that I found with the keyword \`${args.join(` `)}\`.`)
     }
     message.react(`✅`)
 };

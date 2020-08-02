@@ -32,5 +32,5 @@ exports.run = async (bot, message, args) => {
     var msg = await message.channel.send(balEmbed)
     var cash = await db.fetch(`cash_${user.id}`)
     if (cash === null) cash = 0
-    setTimeout(() => msg.edit(balEmbed.setDescription(`\`\`\`${cash} coins\`\`\``)), 2000)
+    setTimeout(() => msg.edit(balEmbed.setDescription(`\`\`\`${cash} coins\`\`\``)), 500)
 }

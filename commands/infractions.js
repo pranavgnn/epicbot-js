@@ -53,7 +53,7 @@ exports.run = async (bot, message, args) => {
                     .setColor(`#00ff00`)
                 )
             } else if (args[1].toLowerCase() === `all`) message.channel.send(new MessageEmbed()
-                    .setTitle(`Successfully cleared infraction!`)
+                    .setTitle(`Successfully cleared infractions!`)
                     .setDescription(`Successfully cleared all the infractions of ${user.user.tag}!`)
                     .setColor(`#00ff00`)
                 )
