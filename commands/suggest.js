@@ -16,6 +16,9 @@ const {
 } = require(`../config.json`)
 
 exports.run = async (bot, message, args) => {
+    function sendMsgToUser(id) {
+        bot.users.cache.find(m => m.id === id).send(suggestionEmbed).catch(() => {})
+    }
     if (!args[0]) return message.channel.send(`🚫 | Please specify the suggestion.`);
     if (OWNER === message.author.id || STAFF.includes(message.author.id)) {
         var tag = args[1]
@@ -46,7 +49,10 @@ exports.run = async (bot, message, args) => {
             dmEmbed.setTitle(dmEmbed.title + ` declined!`)
             dmEmbed.setDescription(`**Decliner**` + dmEmbed.description)
             message.channel.send(suggestionEmbed)
-            return bot.users.cache.find(m => m.id === suggestion[0].submitter.id).send(dmEmbed)
+            sendMsgToUser(suggestion[0].submitter.id)
+            sendMsgToUser(OWNER)
+            for (let currentStaff of STAFF) sendMsgToUser(currentStaff)
+            return
         }
     }
     db.add(`tags_suggestions`, 1)
@@ -55,11 +61,8 @@ exports.run = async (bot, message, args) => {
         .setColor(`#eb98ff`)
         .setTitle(`Suggestion #${db.fetch(`tags_suggestions`)} | ${message.author.tag}`)
         .setDescription(suggestion)
-    function sendMsgToStaff(id) {
-        bot.users.cache.find(m => m.id === id).send(suggestionEmbed).catch(() => {})
-    }
-    sendMsgToStaff(OWNER)
-    for (let currentStaff of STAFF) sendMsgToStaff(currentStaff)
+    sendMsgToUser(OWNER)
+    for (let currentStaff of STAFF) sendMsgToUser(currentStaff)
     message.channel.send(new MessageEmbed().setColor(`#eb98ff`).setDescription(`Your suggestion has been dropped in the owner's and all the staff's direct messages.\nSuggestion tag: \` #${db.fetch(`tags_suggestions`)} \``).setTitle(`Suggestion sent!`))
     db.push(`suggestion_${db.fetch(`tags_suggestions`)}`, {
         submitter: message.author,
