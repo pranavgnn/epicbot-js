@@ -1,11 +1,11 @@
 exports.config = {
-    name: "accept",
-    aliases: ["approve"],
+    name: "decline",
+    aliases: ["deny", "cancel"],
     cooldown: 5,
     guildOnly: true,
     staffOnly: true,
-    description: "Accepts the suggestion / bug report that was reported and is active in the #suggestions channel of the support server.",
-    usage: "accept <\"Suggestion\" / \"Report\"> <Tag> [Reason]",
+    description: "Declines the suggestion / bug report that was reported and is active in the #suggestions channel of the support server.",
+    usage: "decline <\"Suggestion\" / \"Report\"> <Tag> [Reason]",
     category: "Staff Only",
 };
 
@@ -32,17 +32,17 @@ exports.run = async (bot, message, args) => {
         await db.set(`suggestion_db`, newData)
         var fetchedMsgs = await supportGuild.channels.cache.find(c => c.id === `739464942746468393`).messages.fetch(chosenSuggestion.msg.id)
         fetchedMsgs.first().delete()
-        var acceptEmbed = new MessageEmbed()
-            .setColor(`#00ff00`)
-            .setTitle(`Suggestion accepted!`)
-            .setDescription(`Your suggestion has been accepted!`)
-            .addField(`Suggestion #${tag}`, chosenSuggestion.suggestion)
-            .addField(`Accepted staff`, `${message.author.tag} (${message.author.id})`)
+        var declineEmbed = new MessageEmbed()
+            .setColor(`#ff0000`)
+            .setTitle(`Suggestion declined!`)
+            .setDescription(`Your suggestion has been declined!`)
+            .addField(`declined #${tag}`, chosenSuggestion.suggestion)
+            .addField(`Declined staff`, `${message.author.tag} (${message.author.id})`)
             .addField(`Reason`, reason)
             .setTimestamp(message.createdTimestamp)
-        await bot.users.cache.find(u => u.id === chosenSuggestion.submitter.id).send(acceptEmbed).catch(() => {})
-        acceptEmbed.setDescription(`Suggestion #${tag} has been accepted`)
-        acceptEmbed.addField(`Suggested by`, `${chosenSuggestion.submitter.tag} (${chosenSuggestion.submitter.id})`)
-        supportGuild.channels.cache.find(c => c.id === `739484770404270142`).send(acceptEmbed)
+        await bot.users.cache.find(u => u.id === chosenSuggestion.submitter.id).send(declineEmbed).catch(() => {})
+        declineEmbed.setDescription(`Suggestion #${tag} has been declined`)
+        declineEmbed.addField(`Suggested by`, `${chosenSuggestion.submitter.tag} (${chosenSuggestion.submitter.id})`)
+        supportGuild.channels.cache.find(c => c.id === `739484770404270142`).send(declineEmbed)
     } else return message.channel.send(`🚫 | That type is invalid. Choose any of these: \`Suggestion\`, \`Report\``)
 }
