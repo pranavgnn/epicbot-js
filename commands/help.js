@@ -47,7 +47,7 @@ exports.run = async (bot, message, args) => {
             helpCommand.addField(`Category`, requiredCmd.config.category)
             helpCommand.addField(`Server Only`, requiredCmd.config.guildOnly)
             helpCommand.addField(`Bot Staff Only`, requiredCmd.config.staffOnly)
-            helpCommand.addField(`Cooldown`, require(`../modules/secondsToDhms.js`)(requiredCmd.config.cooldown || 1))
+            helpCommand.addField(`Cooldown`, require(`../modules/secondsToDhms.js`)(requiredCmd.config.cooldown || 3))
             helpCommand.addField(`Aliases`, requiredCmd.config.aliases && requiredCmd.config.aliases.join(`, `) || `None`)
             helpCommand.addField(`Required Permissions`, require(`../modules/sortPermissions.js`)(requiredCmd.config.permissions))
             message.channel.send(helpCommand)

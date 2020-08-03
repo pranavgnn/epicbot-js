@@ -8,11 +8,9 @@ const {
     OWNER,
     STAFF,
 } = require('./config.json');
-const { time } = require('console');
 
 var bot = new Discord.Client();
 bot.commands = new Discord.Collection();
-var cooldowns = new Discord.Collection();
 
 function loadCmds() {
     let commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -39,8 +37,8 @@ bot.on('message', async message => {
 
     if (message.author.bot) return;
     if(message.guild && !message.content.startsWith(PREFIX)) {
-        var data = await db.fetch(`messages_${message.guild.id}_${message.author.id}`)
-        if (!data) data = {
+        var data = await db.fetch(`messages_${message.guild.id}_${message.author.id}`) || 
+        {
             count: 0,
             target: 50,
             level: 0,
@@ -149,22 +147,23 @@ message.channel.messages.delete()
     if (cmd.config.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute the ${cmd.config.name} command inside DMs!`);
     };
-
-    if (!cooldowns.has(cmd.config.name)) {
-        cooldowns.set(cmd.config.name, new Discord.Collection());
-    };
-    var now = Date.now();
-    var timestamps = cooldowns.get(cmd.config.name);
-    var cooldownAmount = (cmd.config.cooldown || 1) * 1000;
-    if (timestamps.has(message.author.id)) {
-        var expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-        if (now < expirationTime) {
-            var timeLeft = (expirationTime - now) / 1000;
-            return message.channel.send(new Discord.MessageEmbed().setColor(`#ff0000`).setTitle(`🚫 | Hey, hey! Chill!`).setDescription(`You're on a slowmode! Please wait ${require(`./modules/secondsToDhms.js`)(timeLeft.toFixed(0))} to execute the ${cmd.config.name} command again.`));
-        };
-    };
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    var cmdCooldown = (cmd.config.cooldown || 3) * 1000
+    var cooldownData = await db.fetch(`cooldowns_${message.author.id}_${cmd.config.name}`) ||
+    {
+        lastUsed: message.createdTimestamp - cmdCooldown,
+        streak: 0,
+        totalUse: 0
+    }
+    var timeLeft = Math.round(((cooldownData.lastUsed + cmdCooldown) - Date.now()) / 1000)
+    if ((message.createdTimestamp - cooldownData.lastUsed) < cmdCooldown) return message.channel.send(new Discord.MessageEmbed().setColor(`#ff0000`).setTitle(`🚫 | Hey, hey! Chill!`).setDescription(`You're on a slowmode! Please wait ${require(`./modules/secondsToDhms.js`)(timeLeft)} to execute the ${cmd.config.name} command again.`));
+    var newData = {
+        lastUsed: message.createdTimestamp,
+        streak: cooldownData.streak,
+        totalUse: cooldownData.totalUse + 1
+    }
+    if ((message.createdTimestamp - cooldownData.lastUsed) < (cmdCooldown * 10)) newData.streak = newData.streak + 1
+    else newData.streak = 1
+    await db.set(`cooldowns_${message.author.id}_${cmd.config.name}`, newData)
     cmd.run(bot, message, args);
 });
 

@@ -13,20 +13,27 @@ const db = require(`quick.db`);
 const { MessageEmbed } = require("discord.js");
 
 exports.run = async (bot, message, args) => {
+    async function fetchSuggestion(tag) {
+        for (let suggestion of await db.fetch(`suggestion_db`)) {
+            if (suggestion.tag === tag) return suggestion
+        }
+        return undefined;
+    }
     var supportGuild = bot.guilds.cache.find(g => g.id === `719558358776152065`)
     if (!args[0]) return message.channel.send(`🚫 | Please specify a type. (Suggestion / Report)`)
     if (!args[1]) return message.channel.send(`🚫 | Please specify the suggestion/report tag.`)
     var type = args[0].toLowerCase()
     var tag = args[1]
     var reason = args.slice(2).join(` `) || `No reason specified.`
-    if (tag.startsWith(`#`)) args = args.slice(1)
+    if (`${tag}`.startsWith(`#`)) args = args.slice(1)
     if (isNaN(tag)) return message.channel.send(`🚫 | That is not a valid tag.`)
     if (type === `suggestion`) {
         var suggestionData = await db.fetch(`suggestion_db`)
         var suggestionTag = await db.fetch(`tag_suggestion`)
         if (!suggestionData || !suggestionData[0]) return message.channel.send(`🚫 | There are currently no active suggestions.`)
         if (tag > suggestionTag || tag < 0) return message.channel.send(`🚫 | That is not a valid tag.`)
-        var chosenSuggestion = suggestionData[parseInt(tag) - 1]
+        var chosenSuggestion = await fetchSuggestion(parseInt(tag))
+        if (!chosenSuggestion) return message.channel.send(`🚫 | That is not a valid tag.`)
         var newData = []
         for (let suggestion of suggestionData) if (suggestion !== chosenSuggestion) newData.push(suggestion)
         await db.set(`suggestion_db`, newData)
@@ -43,6 +50,7 @@ exports.run = async (bot, message, args) => {
         await bot.users.cache.find(u => u.id === chosenSuggestion.submitter.id).send(declineEmbed).catch(() => {})
         declineEmbed.setDescription(`Suggestion #${tag} has been declined`)
         declineEmbed.addField(`Suggested by`, `${chosenSuggestion.submitter.tag} (${chosenSuggestion.submitter.id})`)
-        supportGuild.channels.cache.find(c => c.id === `739484770404270142`).send(declineEmbed)
+        await supportGuild.channels.cache.find(c => c.id === `739484770404270142`).send(declineEmbed)
+        message.channel.send(`Suggestion with the tag #${tag} has been successfully declined by ${message.author}.`)
     } else return message.channel.send(`🚫 | That type is invalid. Choose any of these: \`Suggestion\`, \`Report\``)
 }
