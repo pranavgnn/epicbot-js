@@ -31,7 +31,7 @@ exports.run = async (bot, message, args) => {
         for (let suggestion of suggestionData) if (suggestion !== chosenSuggestion) newData.push(suggestion)
         await db.set(`suggestion_db`, newData)
         var fetchedMsgs = await supportGuild.channels.cache.find(c => c.id === `739464942746468393`).messages.fetch(chosenSuggestion.msg.id)
-        fetchedMsgs.first().delete()
+        fetchedMsgs.delete()
         var acceptEmbed = new MessageEmbed()
             .setColor(`#00ff00`)
             .setTitle(`Suggestion accepted!`)
