@@ -58,6 +58,7 @@ exports.run = async (bot, message, args) => {
             message.channel.send(topEmbed)
         }
     } else if (args[0] && xpAliases.includes(args[0].toLowerCase())) {
+        resp.sort((a, b) => (a.data.count < b.data.count) ? 1 : -1);
         for (let key of resp) {
             if (key.ID.startsWith(`messages_${message.guild.id}`)) {
                 var user = require(`../modules/getUserFromMention.js`)(key.ID.split(`_`)[2], message.guild)
