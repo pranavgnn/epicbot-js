@@ -58,7 +58,11 @@ bot.on('message', async message => {
             message.channel.send(new Discord.MessageEmbed()
                 .setColor(`#eb98ff`)
                 .setTitle(`Level Up!`)
-                .setDescription(`GG! ${message.author.tag} just levelled up!\n\nLevel:\`\`\`Level ${newData.level}\`\`\`Reward:\`\`\`${data.reward} coins\`\`\`Current balance:\`\`\`${db.fetch(`cash_${message.author.id}`)} coins\`\`\``)
+                .setDescription(`GG! **${message.author.tag}** levelled up!`)
+                .addField(`Level`, `Level ${newData.level}`, true)
+                .addField(`Reward`, `${data.reward} coins`, true)
+                .addField(`Current Balance`, `${db.fetch(`cash_${message.author.id}`)} coins`)
+                .setTimestamp(message.createdTimestamp)
             )
         }
     }
@@ -68,12 +72,6 @@ message.channel.messages.delete()
     var cont = msg.slice(PREFIX.length).split(/ +/);
     var command = cont[0].toLowerCase();
     var args = cont.slice(1);
-
-    if (command === 'reset-cooldowns') {
-        if (message.author.id !== OWNER && !STAFF.includes(message.author.id)) return message.channel.send(new Discord.MessageEmbed().setTitle(`Error:`).setDescription(`Staff access only.\nAccess denied.`).setColor(`ff0000`))
-        cooldowns = new Discord.Collection();
-        message.channel.send(new Discord.MessageEmbed().setColor(`#00ff00`).setTitle(`Cooldown reset!`).setDescription(`Successfully reset all the cooldowns!`))
-    }
 
     if (command === 'reload') {
         var reloadEmbed = new Discord.MessageEmbed().setTitle(`Error:`).setDescription(`Staff access only.\nAccess denied.`).setColor(`ff0000`)
@@ -147,6 +145,13 @@ message.channel.messages.delete()
     if (cmd.config.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute the ${cmd.config.name} command inside DMs!`);
     };
+    if (message.guild && (await db.fetch(`enabledcmds_${message.guild.id}`) || [])[command] === false) return message.channel.send(new Discord.MessageEmbed()
+        .setColor(`#ff0000`)
+        .setTitle(`Run failed`)
+        .setDescription(`The command **${command}** has been disabled in this server. If you want to use it, please get into contact with the admins of the server and ask them to enable it.`)
+        .setFooter(message.author.tag, message.author.avatarURL())
+        .setTimestamp(message.createdTimestamp)
+    )
     var cmdCooldown = (cmd.config.cooldown || 3) * 1000
     var cooldownData = await db.fetch(`cooldowns_${message.author.id}_${cmd.config.name}`) ||
     {
@@ -161,7 +166,7 @@ message.channel.messages.delete()
         streak: cooldownData.streak,
         totalUse: cooldownData.totalUse + 1
     }
-    if ((message.createdTimestamp - cooldownData.lastUsed) < (cmdCooldown * 10)) newData.streak = newData.streak + 1
+    if ((message.createdTimestamp - cooldownData.lastUsed) < (cmdCooldown * 1.5)) newData.streak = newData.streak + 1
     else newData.streak = 1
     await db.set(`cooldowns_${message.author.id}_${cmd.config.name}`, newData)
     cmd.run(bot, message, args);

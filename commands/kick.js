@@ -13,7 +13,7 @@ const db = require(`quick.db`)
 const { MessageEmbed } = require(`discord.js`)
 
 exports.run = async (bot, message, args) => {
-    //if (!bot.user.hasPermission(['KICK_MEMBERS'])) return message.channel.send(`🚫 | I do not have permissions to kick members!`)
+    if (!message.guild.me.hasPermission(['KICK_MEMBERS'])) return message.channel.send(`🚫 | I do not have permissions to kick members!`)
     var reason = args.slice(1).join(' ') || `No reason specified`
     var kickEmbed = new MessageEmbed()
         .setTitle(`You have been kicked from ${message.guild.name}`)

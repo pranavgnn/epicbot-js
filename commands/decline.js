@@ -43,7 +43,7 @@ exports.run = async (bot, message, args) => {
             .setColor(`#ff0000`)
             .setTitle(`Suggestion declined!`)
             .setDescription(`Your suggestion has been declined!`)
-            .addField(`declined #${tag}`, chosenSuggestion.suggestion)
+            .addField(`Declined #${tag}`, chosenSuggestion.suggestion)
             .addField(`Declined staff`, `${message.author.tag} (${message.author.id})`)
             .addField(`Reason`, reason)
             .setTimestamp(message.createdTimestamp)

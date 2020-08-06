@@ -43,7 +43,7 @@ exports.run = async (bot, message, args) => {
             .setColor(`#00ff00`)
             .setTitle(`Suggestion accepted!`)
             .setDescription(`Your suggestion has been accepted!`)
-            .addField(`accepted #${tag}`, chosenSuggestion.suggestion)
+            .addField(`Accepted #${tag}`, chosenSuggestion.suggestion)
             .addField(`Accepted staff`, `${message.author.tag} (${message.author.id})`)
             .addField(`Reason`, reason)
             .setTimestamp(message.createdTimestamp)
