@@ -49,7 +49,7 @@ bot.on('message', async message => {
         if (data.count === data.target) {
             var newData = {
                 count: data.count,
-                target: Math.round(data.target * 2.25),
+                target: Math.round(data.target * 2.5),
                 level: data.level + 1,
                 reward: Math.round(data.reward * 1.75)
             }
@@ -66,10 +66,20 @@ bot.on('message', async message => {
             )
         }
     }
-    if (!message.content.startsWith(PREFIX)) return;
-message.channel.messages.delete()
+    var prefixes = await db.fetch(`prefixes_${message.guild.id}`) || []
+    prefixes.push(`<@!${bot.user.id}> `)
+    prefixes.push(`<@${bot.user.id}> `)
+    function startsWithPrefix() {
+        for (let i = 0; i < prefixes.length; i++) {
+            if (message.content.startsWith(prefixes[i])) return prefixes[i]
+        }
+        return undefined
+    }
+    var prefix = startsWithPrefix()
+    if (!prefix) return;
+    
     var msg = message.content;
-    var cont = msg.slice(PREFIX.length).split(/ +/);
+    var cont = msg.slice(prefix.length).split(/ +/);
     var command = cont[0].toLowerCase();
     var args = cont.slice(1);
 

@@ -5,7 +5,7 @@ exports.config = {
     guildOnly: true,
     staffOnly: false,
     description: "Displays the infractions of yours / specified user. Also used to remove infractions.",
-    usage: "infractions [User] [Operation]",
+    usage: "infractions [User] [Clearing tag / \"All\"]",
     category: "Moderation",
 };
 
@@ -21,10 +21,11 @@ exports.run = async (bot, message, args) => {
         user = require(`../modules/getUserFromMention.js`)(args[0], message.guild)
         if (!user) return message.channel.send(`🚫 | I could not find that user in this server.`)
         infEmbed.setTitle(`${user.user.username}'s infractions`)
+        user = user.user
     }
-    var infractions = await db.fetch(`infractions_${message.guild.id}_${message.author.id}`)
+    var infractions = await db.fetch(`infractions_${message.guild.id}_${user.id}`)
     if (!infractions || infractions && !infractions[0]) {
-        infEmbed.addField(`No infractions`, `${user.user.username} has no infractions.`)
+        infEmbed.addField(`No infractions`, `${user.username || message.author.username} has no infractions.`)
     } else {
         infractions.forEach((data, i) => {
             var date = new Date(data.time).toUTCString()
@@ -34,7 +35,6 @@ exports.run = async (bot, message, args) => {
     if (args[1]) {
         require(`../modules/checkPermission.js`)(user, ['MANAGE_MESSAGES']).then(async hasPerm => {
             if (typeof hasPerm === 'string') return message.channel.send(new MessageEmbed().setTitle(`You don't have permissions!`).setDescription(`This command requires the permissions:\`\`\`${hasPerm}\`\`\``).setColor(`#ff0000`))
-            db.delete(`infractions_${message.guild.id}_${message.author.id}`)
             if (parseInt(args[1])) {
                 var newInfractions = []
                 var removedInfraction = {}
@@ -45,18 +45,22 @@ exports.run = async (bot, message, args) => {
                         removedInfraction.id = i + 1
                     }
                 })
-                db.set(`infractions_${message.guild.id}_${message.author.id}`, newInfractions)
+                if (!removedInfraction.data) return message.channel.send(`🚫 | That isn't a valid tag!`)
+                db.set(`infractions_${message.guild.id}_${user.id}`, newInfractions)
                 var date = new Date(removedInfraction.data.time).toUTCString()
                 if (removedInfraction) message.channel.send(new MessageEmbed()
                     .setTitle(`Successfully cleared infraction!`)
                     .setDescription(`**ID**: #${removedInfraction.id}\n**Target**: ${removedInfraction.data.target.tag}\n**Moderator**: ${removedInfraction.data.warnee.tag}\n**Reason**: ${removedInfraction.data.reason}\n**Time**: ${date}:`)
                     .setColor(`#00ff00`)
                 )
-            } else if (args[1].toLowerCase() === `all`) message.channel.send(new MessageEmbed()
+            } else if (args[1].toLowerCase() === `all`) {
+                db.delete(`infractions_${message.guild.id}_${user.id}`)
+                message.channel.send(new MessageEmbed()
                     .setTitle(`Successfully cleared infractions!`)
-                    .setDescription(`Successfully cleared all the infractions of ${user.user.tag}!`)
+                    .setDescription(`Successfully cleared all the infractions of ${user.tag}!`)
                     .setColor(`#00ff00`)
                 )
+            } else return message.channel.send(`🚫 | Please input an integer representing the tag or "all" representing to clear all infractions.`)
         })
     } else message.channel.send(infEmbed)
 }

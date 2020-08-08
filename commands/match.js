@@ -2,7 +2,7 @@ exports.config = {
     name: "match",
     aliases: ["ship", "mergename", "usermerge"],
     cooldown: 5,
-    guildOnly: false,
+    guildOnly: true,
     staffOnly: false,
     description: "Merges yours and the specified user's, or two specified users' usernames and mentions it to you.",
     usage: "match <User 1> [User 2]",

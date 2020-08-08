@@ -13,7 +13,7 @@ const db = require(`quick.db`)
 const { MessageEmbed } = require(`discord.js`)
 
 exports.run = async (bot, message, args) => {
-    if (!message.guild.message.hasPermission(['BAN_MEMBERS'])) return message.channel.send(`🚫 | I do not have permissions to ban members!`)
+    if (!message.guild.me.hasPermission(['BAN_MEMBERS'])) return message.channel.send(`🚫 | I do not have permissions to ban members!`)
     var reason = args.slice(1).join(' ') || `No reason specified`
     var banEmbed = new MessageEmbed()
         .setTitle(`You have been banned from ${message.guild.name}`)
@@ -25,13 +25,15 @@ exports.run = async (bot, message, args) => {
         var user = require(`../modules/getUserFromMention.js`)(args[0], message.guild)
         if (!user) return message.channel.send(`🚫 | I could not find that user in this server.`)
         db.delete(`infractions_${message.guild.id}_${message.author.id}`)
-        await user.send(banEmbed).catch(() => message.channel.send(`Can not direct message this user.`))
-        user.ban(reason).catch(() => {
+        await user.send(banEmbed).catch(() => {})
+        user.ban(reason).then(() => {
+            banEmbed.setTitle(`${user.user.username} has been banned from the server.`)
+            message.channel.send(banEmbed)
+        }).catch(() => {
             banEmbed.setTitle(`Failed to ban ${user.user.tag}`)
             banEmbed.setDescription(`I could not ban ${user.user.username} because they are above me in role hierarchy.`)
             return message.channel.send(banEmbed)
         })
-        banEmbed.setTitle(`${user.user.username} has been banned from the server.`)
-        message.channel.send(banEmbed)
+        
     })
 }

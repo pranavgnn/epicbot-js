@@ -8,7 +8,7 @@ exports.config = {
     category: "Miscellaneous",
 };
 
-exports.run = async (_, message) => {
+exports.run = async (bot, message) => {
     const otn = Math.round((new Date()).getTime());
     const m = await message.channel.send({ embed: { title: 'Ping?', color: '#eb98ff' } });
     const uts = message.createdTimestamp;
@@ -17,7 +17,7 @@ exports.run = async (_, message) => {
         embed: {
             title: '🏓 Pong!',
             color: '#eb98ff',
-            description: `API Latency: \` ${m.createdTimestamp - message.createdTimestamp}ms \`\nBot Latency: \` ${ntn}ms \``,
+            description: `API Latency: \` ${m.createdTimestamp - message.createdTimestamp}ms \`\nBot Latency: \` ${bot.ws.ping}ms \``,
         }
     };
     m.edit(embed);

@@ -9,7 +9,6 @@ exports.config = {
 };
 
 const fetch = require(`node-fetch`)
-
 const { MessageEmbed } = require(`discord.js`)
 
 exports.run = async (bot, message, args) => {

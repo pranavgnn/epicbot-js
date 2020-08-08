@@ -25,13 +25,14 @@ exports.run = async (bot, message, args) => {
         var user = require(`../modules/getUserFromMention.js`)(args[0], message.guild)
         if (!user) return message.channel.send(`🚫 | I could not find that user in this server.`)
         db.delete(`infractions_${message.guild.id}_${message.author.id}`)
-        await user.send(kickEmbed).catch(() => message.channel.send(`Can not direct message this user.`))
-        await user.kick(reason).catch(() => {
+        await user.send(kickEmbed).catch(() => {})
+        user.kick(reason).then(() => {
+            kickEmbed.setTitle(`${user.user.username} has been kicked from the server.`)
+            message.channel.send(kickEmbed)
+        }).catch(() => {
             kickEmbed.setTitle(`Failed to kick ${user.user.tag}`)
             kickEmbed.setDescription(`I could not kick ${user.user.username} because they are above me in role hierarchy.`)
-            return message.channel.send(kickEmbed)
+            message.channel.send(kickEmbed)
         })
-        kickEmbed.setTitle(`${user.user.username} has been kicked from the server.`)
-        message.channel.send(kickEmbed)
     })
 }

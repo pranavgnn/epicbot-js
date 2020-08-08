@@ -13,7 +13,6 @@ const db = require(`quick.db`)
 const { MessageEmbed } = require(`discord.js`)
 
 exports.run = async (bot, message, args) => {
-    //if (!bot.user.hasPermission(['KICK_MEMBERS'])) return message.channel.send(`🚫 | I do not have permissions to kick members!`)
     var reason = args.slice(1).join(' ')
     var warnEmbed = new MessageEmbed()
         .setTitle(`You have been warned in ${message.guild.name}`)
@@ -25,7 +24,7 @@ exports.run = async (bot, message, args) => {
         if (!args[1]) return message.channel.send(`🚫 | You need to specify a a reason!`)
         var user = require(`../modules/getUserFromMention.js`)(args[0], message.guild)
         if (!user) return message.channel.send(`🚫 | I could not find that user in this server.`)
-        db.push(`infractions_${message.guild.id}_${message.author.id}`, 
+        db.push(`infractions_${message.guild.id}_${user.user.id}`, 
         {
             reason: reason,
             warnee: message.author,

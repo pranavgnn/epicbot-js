@@ -58,8 +58,12 @@ exports.run = async (bot, message, args) => {
             message.channel.send(topEmbed)
         }
     } else if (args[0] && xpAliases.includes(args[0].toLowerCase())) {
-        resp.sort((a, b) => (a.data.count < b.data.count) ? 1 : -1);
-        for (let key of resp) {
+        var leaderboardData = []
+        resp.forEach(data => {
+            if (data.ID.startsWith(`messages_${message.guild.id}`)) leaderboardData.push(data)
+        })
+        leaderboardData.sort((a, b) => (a.data.count > b.data.count) ? -1 : 1);
+        for (let key of leaderboardData) {
             if (key.ID.startsWith(`messages_${message.guild.id}`)) {
                 var user = require(`../modules/getUserFromMention.js`)(key.ID.split(`_`)[2], message.guild)
                 key.user = user.user
@@ -77,7 +81,7 @@ exports.run = async (bot, message, args) => {
         topEmbed.setTitle(`XP leaderboards for ${message.guild.name}`)
         message.channel.send(topEmbed)
     } else message.channel.send(new MessageEmbed()
-        .setColor(`eb98ff`)
+        .setColor(`#eb98ff`)
         .setTitle(`Leaderboard fetch failed`)
         .setDescription(`You either did not specify a category, or entered a wrong category. Choose any category below.`)
         .addField(xpAliases[0].slice(0, 1).toUpperCase() + xpAliases[0].slice(1).toLowerCase(), `$leaderboard ${xpAliases[0]}`)
