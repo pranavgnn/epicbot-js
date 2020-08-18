@@ -12,7 +12,7 @@ const getUserFromMention = require(`../modules/getUserFromMention.js`);
 
 exports.run = async (_, message, args) => {
     var user = getUserFromMention(args[0], message.guild);
-    if (typeof user === "string") return message.channel.send(user);
+    if (!user) return message.channel.send(`🚫 | That user isn't in this server!`);
     if (user.user.bot) return message.channel.send(`Wow. Are you so noob that you head out to fight bots?`);
     if (message.author === user.user) return message.channel.send(`Wow. Imagine fighting with yourself.`);
     var healths = {};

@@ -176,6 +176,7 @@ bot.on('message', async message => {
         streak: cooldownData.streak,
         totalUse: cooldownData.totalUse + 1
     }
+    message.guild.members.cache.find(u => u.id === message.author.id).permissions.toJSON()
     if ((message.createdTimestamp - cooldownData.lastUsed) < (cmdCooldown * 1.5)) newData.streak = newData.streak + 1
     else newData.streak = 1
     await db.set(`cooldowns_${message.author.id}_${cmd.config.name}`, newData)

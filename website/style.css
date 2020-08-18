@@ -158,16 +158,39 @@ body{
     }
 }
 
-.economy {
-    background-color: #23272a;
-    width: 90%;
-    margin-left: 5%;
-    height: 400px;
-    border-radius: 25px;
+.introduction {
+    margin-left: 125px;
+    margin-top: 100px;
 }
 
-.economy .heading {
-    margin-left: 5%;
-    padding-top: 5%;
-    font-size: 500%;
+.introduction .heading {
+    margin-top: -175px;
+    font-size: 30px;
+    margin-left: 250px;
+}
+
+.introduction .btns {
+    margin-top: 50px;
+    font-size: 25px;
+    margin-left: 275px;
+}
+
+.introduction .btn {
+    padding: 1.5% 5%;
+    border: 2px solid #fff;
+    background-color: #7289da;
+}
+
+.introduction a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.introduction .stats {
+    margin-left: 300px;
+    display: flex;
+}
+
+.introduction .stats .members {
+    margin-right: 100px;
 }
