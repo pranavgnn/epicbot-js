@@ -13,12 +13,12 @@ exports.config = {
 const { MessageEmbed } = require(`discord.js`)
 
 exports.run = async (_, message, args) => {
-    if (!args[0]) return message.channel.send(`🚫 | Please specify the message!`)
     require(`../modules/checkPermission.js`)(message.member, this.config.permissions).then(hasPerm => {
         if (typeof hasPerm === 'string') {
             return message.channel.send(new MessageEmbed().setTitle(`You don't have permissions!`).setDescription(`This command requires the permissions:\`\`\`${hasPerm}\`\`\``).setColor(`#ff0000`))
         }
         message.delete()
+        if (!args[0]) return message.channel.send(`<:epicordno:746298702607679600> | Please specify the message!`)
         var cont = args.join(' ');
         if (args[0].startsWith('{"embed":')) cont = JSON.parse(args.join(' ').replace(/'/g, "\""));
         message.channel.send(cont);
