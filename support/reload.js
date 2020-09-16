@@ -24,7 +24,7 @@ exports.reload = async (bot, message, args, owner, staff) => {
         .setColor(`ff0000`);
 
     //Perms check
-    if (message.author.id !== owner && staff.includes(message.author.id)) return message.channel.send(reloadEmbed);
+    if (message.author.id !== owner && !staff.includes(message.author.id)) return message.channel.send(reloadEmbed);
 
     reloadEmbed.setColor(`#00ff00`);
     reloadEmbed.setTitle(`Reload Successful!`);
