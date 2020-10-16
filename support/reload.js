@@ -23,7 +23,11 @@ exports.reload = async (bot, message, args, owner, staff) => {
         .setDescription(`Staff access only.\nAccess denied.`)
         .setColor(`ff0000`);
 
+<<<<<<< HEAD
     //Permissions check
+=======
+    //Perms check
+>>>>>>> cb191ad6d92d83c6ba5f6d487c2dc8af174e5b6e
     if (message.author.id !== owner && !staff.includes(message.author.id)) return message.channel.send(reloadEmbed);
 
     reloadEmbed.setColor(`#00ff00`);
