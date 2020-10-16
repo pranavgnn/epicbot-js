@@ -8,8 +8,8 @@ exports.config = {
     category: "Fun",
 };
 
-const fetch = require(`node-fetch`)
-const { MessageEmbed } = require(`discord.js`)
+const fetch = require(`node-fetch`);
+const { MessageEmbed } = require(`discord.js`);
 
 exports.run = async (bot, message, args) => {
     fetch(`https://api.thecatapi.com/v1/images/search?size=small&has_breeds=true`)
@@ -22,4 +22,4 @@ exports.run = async (bot, message, args) => {
                 .setColor(`#eb98ff`)
             message.channel.send(catEmbed);
         });
-}
+};

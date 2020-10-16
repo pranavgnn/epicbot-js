@@ -16,5 +16,5 @@ exports.run = async (bot, message, args) => {
     var channel = supportGuild.channels.cache.find(c => c.name.split(`-`).reverse()[0] === user.id);
     if (!channel) return message.channel.send(`🚫 | There is no direct message channel for this user!`)
     await channel.delete();
-    message.react(`✅`)
-}
+    message.react(`✅`);
+};

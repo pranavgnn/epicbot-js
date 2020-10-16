@@ -24,5 +24,5 @@ exports.run = async (bot, message, args) => {
             topic: `**User Information**\nTag: ${user.tag}\nID: ${user.id}`
         }
     );
-    message.react(`✅`)
-}
+    message.react(`✅`);
+};

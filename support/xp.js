@@ -1,3 +1,4 @@
+const { MessageEmbed } = require("discord.js");
 const db = require(`quick.db`);
 
 module.exports = async message => {
@@ -19,7 +20,7 @@ module.exports = async message => {
         };
         db.set(`messages_${message.guild.id}_${message.author.id}`, newData);
         db.add(`cash_${message.author.id}`, data.reward);
-        message.channel.send(new Discord.MessageEmbed()
+        message.channel.send(new MessageEmbed()
             .setColor(`#eb98ff`)
             .setTitle(`Level Up!`)
             .setDescription(`GG! **${message.author.tag}** levelled up!`)

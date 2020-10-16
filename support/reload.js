@@ -1,7 +1,7 @@
 const fs = require(`fs`);
 const { MessageEmbed } = require(`discord.js`);
 
-const supportedDirs = ["./support", "./modules"];
+const supportedDirs = ["./support", "./modules", "./commands", "./events", "./node_modules", "./db-models", "./icon"];
 
 //## Cache delete function ##\\
 exports.deleteAllCache = (path, bot) => {
@@ -23,17 +23,17 @@ exports.reload = async (bot, message, args, owner, staff) => {
         .setDescription(`Staff access only.\nAccess denied.`)
         .setColor(`ff0000`);
 
-    //Perms check
-    if (message.author.id !== owner && staff.includes(message.author.id)) return message.channel.send(reloadEmbed);
+    //Permissions check
+    if (message.author.id !== owner && !staff.includes(message.author.id)) return message.channel.send(reloadEmbed);
 
     reloadEmbed.setColor(`#00ff00`);
     reloadEmbed.setTitle(`Reload Successful!`);
 
     // Single command reload
     if (args[0] && bot.commands.get(args[0].toLowerCase())) {
-        delete require.cache[require.resolve(`./commands/${args[0].toLowerCase()}.js`)];
+        delete require.cache[require.resolve(`../commands/${args[0].toLowerCase()}.js`)];
         try {
-            var newCommand = require(`./commands/${args[0].toLowerCase()}.js`);
+            var newCommand = require(`../commands/${args[0].toLowerCase()}.js`);
             bot.commands.set(newCommand.config.name, newCommand);
         } catch (error) {
             reloadEmbed.setTitle(`Error while loading command ${args[0].toLowerCase()}`);

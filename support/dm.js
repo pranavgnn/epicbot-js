@@ -6,40 +6,6 @@ function attachUrl(message) {
     return returnArray;
 };
 
-function format(str) {
-    return str
-        .replace(/!/g, "-")
-        .replace(/@/g, "-")
-        .replace(/#/g, "-")
-        .replace(/\$/g, "-")
-        .replace(/%/g, "-")
-        .replace(/\^/g, "-")
-        .replace(/&/g, "-")
-        .replace(/\*/g, "-")
-        .replace(/\(/g, "-")
-        .replace(/\)/g, "-")
-        .replace(/_/g, "-")
-        .replace(/\+/g, "-")
-        .replace(/=/g, "-")
-        .replace(/{/g, "-")
-        .replace(/\[/g, "-")
-        .replace(/}/g, "-")
-        .replace(/\]/g, "-")
-        .replace(/\\/g, "-")
-        .replace(/\|/g, "-")
-        .replace(/:/g, "-")
-        .replace(/;/g, "-")
-        .replace(/"/g, "-")
-        .replace(/'/g, "-")
-        .replace(/</g, "-")
-        .replace(/,/g, "-")
-        .replace(/>/g, "-")
-        .replace(/./g, "-")
-        .replace(/\?/g, "-")
-        .replace(/\//g, "-")
-        .replace(/ /g, "-")
-}
-
 exports.saveDM = async (bot, message) => {
     const supportGuild = bot.guilds.cache.get(`719558358776152065`);
     var channel = supportGuild.channels.cache.find(c => c.name.split(`-`).reverse()[0] === message.author.id);

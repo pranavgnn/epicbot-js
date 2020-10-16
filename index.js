@@ -4,7 +4,7 @@ const db = require(`quick.db`)
 
 const {
     TOKEN,
-    PREFIX,
+    PREFIXES,
     OWNER,
     STAFF,
 } = require('./config.json');
@@ -12,10 +12,14 @@ const {
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 
+bot.on(`guildCreate`, (guild) => { require(`./events/guildCreate`)(bot, guild) });
+
+bot.on(`guildDelete`, require(`./events/guildDelete`));
+
 bot.on('ready', () => {
     console.log(`${bot.user.username} came online!`);
 
-    bot.user.setPresence({ activity: { name: `${PREFIX}help | ${bot.users.cache.size} users` } })
+    bot.user.setPresence({ activity: { name: `${PREFIXES[0]}help | ${bot.users.cache.size} users` } })
         .then(() => console.log(`Changed the presence of ${bot.user.username} to "${bot.user.presence.activities[0].name}".`))
         .catch(console.error);
 
@@ -31,7 +35,7 @@ bot.on('message', async message => {
     if (message.author.bot) return;
 
     //XP system
-    if (message.guild && !message.content.startsWith(PREFIX)) require(`./support/xp.js`)(message);
+    if (message.guild && !message.content.startsWith(PREFIXES[0])) require(`./support/xp.js`)(message);
 
     const prefix = require(`./support/prefix.js`)(message, bot.user.id);
 
@@ -43,7 +47,7 @@ bot.on('message', async message => {
         if (bot.users.cache.get(message.guild && message.channel.name.split(`-`).reverse()[0]) && message.channel.parentID === `746556626181554199`)
             if (message.author.id === OWNER || STAFF.includes(message.author.id))
                 return require(`./support/dm.js`).sendDM(bot, message);
-    }
+    };
 
     // Prefix validation
     if (!prefix) return;
@@ -91,8 +95,8 @@ bot.on('message', async message => {
                 .addField(`Responsible moderator`, guildBlacklistData.moderator.tag, true)
                 .addField(`Reason`, guildBlacklistData.reason, true)
                 .addField(`Time of blacklist`, date)
-        )
-    }
+        );
+    };
 
     // Staff only commands
     if (cmd.config.staffOnly)

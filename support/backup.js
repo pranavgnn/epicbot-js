@@ -5,9 +5,9 @@ module.exports = bot => {
             {
                 files: [`./json.sqlite`]
             }
-        )
-    }
+        );
+    };
     
-    backup()
-    setInterval(backup, 30 * 60 * 1000)
-}
+    backup();
+    setInterval(backup, 30 * 60 * 1000);
+};
