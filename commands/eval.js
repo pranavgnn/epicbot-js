@@ -1,7 +1,7 @@
 exports.config = {
     name: "eval",
     aliases: ["evaluate"],
-    cooldown: 5,
+    cooldown: 0,
     guildOnly: false,
     staffOnly: true,
     description: "Evaluates a command on the host's system.",
