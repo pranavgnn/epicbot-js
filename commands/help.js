@@ -12,7 +12,7 @@ exports.config = {
 const fs = require(`fs`)
 const Discord = require(`discord.js`)
 
-const { PREFIXES } = require(`../config.json`)
+const { PREFIX } = require(`../config.json`)
 
 let commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -43,7 +43,7 @@ exports.run = async (bot, message, args) => {
         if (requiredCmd) {
             helpCommand.setTitle(helpCommand.title + ` command ${requiredCmd.config.name}.`)
             helpCommand.addField(`Description`, requiredCmd.config.description)
-            helpCommand.addField(`Usage`, PREFIXES[0] + requiredCmd.config.usage)
+            helpCommand.addField(`Usage`, PREFIX[0] + requiredCmd.config.usage)
             helpCommand.addField(`Category`, requiredCmd.config.category)
             helpCommand.addField(`Server Only`, requiredCmd.config.guildOnly)
             helpCommand.addField(`Bot Staff Only`, requiredCmd.config.staffOnly)
